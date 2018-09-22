@@ -1,0 +1,11 @@
+#!/usr/bin/env nimrun
+
+import os
+import strformat
+
+var target = "World"
+
+if os.paramCount() > 0:
+    target = os.paramStr(1)
+
+echo &"Hello, {target}!"
