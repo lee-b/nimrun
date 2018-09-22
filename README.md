@@ -13,6 +13,11 @@ working so long as nim is installed.
   it was written in. What's the point of naming the interpreter on the shebang
   line, if you're going to use an extension? File extensions are a DOS
   thing anyway.
+
+* Does not pollute your working directory or the script directory with binaries or
+  cache files. Builds everything in a temporary directory, and executes it from
+  there, whilst maintaining the current working directory as the relative location
+  in which data files are found, etc.
   
 * This also preserves your filenames and workflows, even if you decide to use a
   full nim project (or some other language) later (or earlier).
