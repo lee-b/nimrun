@@ -18,6 +18,13 @@ when isMainModule:
 
 
 proc run(executablePath: string, args: seq[string]) : int =
+    # We just need to ignore these signals (rather than pass them
+    # to the child), as the child process will receive them
+    # separately from the terminal due to being in the same
+    # progress group.
+    signal(SIGINT, SIG_IGN)
+    signal(SIGQUIT, SIG_IGN)
+
     let process = startProcess(
         executablePath,
         "",
