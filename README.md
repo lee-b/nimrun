@@ -23,7 +23,17 @@ Simply add the following first line to a single-file nim program:
 #!/usr/bin/env nimrun
 ```
 
-Note that importing from external package dependencies (aside from the nim standard library) aren't (yet?) supported.
+Then make the file executable with:
+
+```
+chmod +x your_script(.nim)
+```
+
+**NOTES:**
+
+* The .nim extension is NOT necessary, and should probably be avoided for drop-in-replacement compatibility with programs from other languages (and just because *it's the Unix way* :) ).
+
+* Importing from external package dependencies (aside from the nim standard library) aren't (yet?) supported.
 
 
 ## Features
