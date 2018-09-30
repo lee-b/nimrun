@@ -34,30 +34,32 @@ proc main() : int =
         os.createDir(srcDir)
         os.createDir(binDir)
 
-        let nimbleFile = basename & ".nimble"
+        let basename_fixed =
+            basename.replace(" ", "_")
+            .replace("-", "_")
+
+        let nimbleFile = basename_fixed & ".nimble"
         let nimblePath = ospaths.joinPath(tempDir, nimbleFile)
-        let srcFile = basename & ".nim"
+        let srcFile = basename_fixed & ".nim"
         let tempSrc = ospaths.joinPath(srcDir, srcFile)
 
         var nimbleFP = open(nimblePath, mode=fmWrite)
 
-        let nimbleDef = strutils.join(@[
-                "# Package",
-                "",
-                "version = \"0.1.0\"",
-                "author = \"(not available)\"",
-                "description = \"(not available)\"",
-                "license = \"(not available)\"",
-                "",
-                "srcDir = \"src\"",
-                "binDir = \"bin\"",
-                "",
-                &"bin = @[\"{basename}\"]",
-                "",
-                "skipExt = @[\"nim\"]",
-            ],
-            "\n"
-        )
+        let nimbleDef = @[
+            "# Package",
+            "",
+            "version = \"0.1.0\"",
+            "author = \"(not available)\"",
+            "description = \"(not available)\"",
+            "license = \"(not available)\"",
+            "",
+            "srcDir = \"src\"",
+            "binDir = \"bin\"",
+            "",
+            &"bin = @[\"{basename_fixed}\"]",
+            "",
+            "skipExt = @[\"nim\"]",
+        ].join("\n")
 
         nimbleFP.write(nimbleDef)
         nimbleFP.close()
@@ -81,7 +83,7 @@ proc main() : int =
             echo build_output
             return build_rc
 
-        let executablePath = ospaths.joinPath(tempDir, "bin", basename)
+        let executablePath = ospaths.joinPath(tempDir, "bin", basename_fixed)
 
         debug(&"Built {executablePath}")
 
