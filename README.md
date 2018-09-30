@@ -29,11 +29,7 @@ Then make the file executable with:
 chmod +x your_script(.nim)
 ```
 
-**NOTES:**
-
-* The .nim extension is NOT necessary, and should probably be avoided for drop-in-replacement compatibility with programs from other languages (and just because *it's the Unix way* :) ).
-
-* Importing from external package dependencies (aside from the nim standard library) aren't (yet?) supported.
+**Note:** as mentioned in the To Do section below, importing from external package dependencies (aside from the nim standard library) isn't (yet?) supported.  The entire standard library should be available to import though.
 
 
 ## Features
