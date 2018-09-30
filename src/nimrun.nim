@@ -68,7 +68,7 @@ proc main() : int =
 
         let build_proc = osproc.startProcess(
             os.findExe("nimble"), tempDir,
-            ["build", ""], nil,
+            ["build",], nil,
             {osproc.poUseShell, },
         )
 
