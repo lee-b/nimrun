@@ -1,19 +1,56 @@
 import logging
-import strformat
+import os
+import osproc
+import ospaths
+import posix
 import sequtils
 import streams
-from os import nil
-from osproc import nil
-from ospaths import nil
-from system import nil
+import strformat
+import system
+import strutils
+
 from tempfile import nil
-from strutils import nil
 
 
-proc main() : int
+when isMainModule:
+    proc main() : int
+    system.quit(main())
 
 
-system.quit(main())
+proc run(executablePath: string, args: seq[string]) : int =
+    let process = startProcess(
+        executablePath,
+        "",
+        options = {
+            poStdErrToStdout,
+            poParentStreams,
+        }
+    )
+
+    return process.waitForExit()
+
+proc runSuppressed(working_dir: string, cmd: string, args: seq[string]) : int =
+    # Runs the process with all output (both stdout and stderr
+    # suppressed, unless an error occurs, in which case the output
+    # is dumped to stderr
+
+    let build_proc = osproc.startProcess(
+        os.findExe("nimble"), working_dir,
+        ["build"], nil,
+        {osproc.poStdErrToStdOut},
+    )
+
+    let build_output = osproc.outputStream(build_proc).readAll()
+
+    let build_rc = osproc.waitForExit(build_proc)
+
+    build_proc.close()
+
+    if build_rc != 0:
+        stderr.writeLine("ERROR: {nim_script} failed to compile; aborting.")
+        stderr.write(build_output)
+
+    return build_rc
 
 
 proc main() : int =
@@ -68,19 +105,13 @@ proc main() : int =
 
         os.copyFile(nim_script, tempSrc)
 
-        let build_proc = osproc.startProcess(
-            os.findExe("nimble"), tempDir,
-            ["build",], nil,
-            {osproc.poUseShell, },
+        let build_rc = runSuppressed(
+            tempDir,
+            os.findExe("nimble"),
+            @["build"]
         )
 
-        let build_output = osproc.outputStream(build_proc).readAll()
-
-        let build_rc = osproc.waitForExit(build_proc)
-
         if build_rc != 0:
-            echo &"ERROR: {nim_script} failed to compile; aborting."
-            echo build_output
             return build_rc
 
         let executablePath = ospaths.joinPath(tempDir, "bin", basename_fixed)
@@ -90,9 +121,7 @@ proc main() : int =
         var script_params = os.commandLineParams()
         script_params.delete(0)
 
-        let args = strutils.join(script_params, " ")
-
-        let rc = os.execShellCmd(&"{executablePath} {args}")
+        let rc = run(executablePath, script_params);
 
         return rc
 

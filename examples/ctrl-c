@@ -1,0 +1,11 @@
+#!/usr/bin/env nimrun
+
+import os
+import streams
+
+
+echo "\nPress Ctrl-C to quit:\n"
+
+while true:
+    echo "hi"
+    sleep(1000)
