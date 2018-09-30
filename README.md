@@ -5,6 +5,26 @@ under the same license as nim itself, in the hopes that it will one day (with
 improvements) be shipped along with nim, so that users can rely on nim scripts
 working so long as nim is installed.
 
+## Installing
+
+Install `nimble`, and ensure its path is set up correctly (if you can run nimble, it probably is).
+
+Then, it should suffice to run:
+
+```
+nimble install nimrun
+```
+
+## Usage
+
+Simply add the following first line to a single-file nim program:
+
+```
+#!/usr/bin/env nimrun
+```
+
+Note that importing from external package dependencies (aside from the nim standard library) aren't (yet?) supported.
+
 
 ## Features
 
@@ -46,10 +66,6 @@ Pull requests welcome!  Especially for anything in the **To Do** section.
 
 * Caching. Nim (and nimble) compile quickly, but it's a bit wasteful without
   caching, regardless.
-
-* Show the nimble build output only when something goes wrong.
-
-* Ensure signals like Ctrl-C are sent to the child process.
 
 * In future, I might add support for parsing the imports and includes, and
   including them in the build, giving access to all of the nimble packages
